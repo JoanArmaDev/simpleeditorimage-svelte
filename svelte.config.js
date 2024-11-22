@@ -8,7 +8,9 @@ const config = {
 		alias: {
       "@/*": "./path/to/lib/*",
     },
-		adapter: adapter()
+		adapter: adapter({
+			runtime: 'nodejs20.x', 
+	})
 	}
 };
 
