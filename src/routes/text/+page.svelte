@@ -97,7 +97,78 @@
 </script>
 
 <main class="flex flex-col items-center justify-center gap-6">
-<Button variant="outline" disabled>
-	Próximamente
-</Button>
+
+	<div class="flex flex-col items-center justify-center gap-4">
+	<!-- 	<ImageArea src={imageEdit} status={statusPreview}></ImageArea> -->
+    {#if statusPreview === 'Loaded'}
+		  <img src={imageEdit} alt="Preview" class="w-full h-full" />
+    {/if}
+		<Dialog.Root>
+			<Dialog.Trigger
+			  style='background-color: #6600ff; color: white;'
+				class={buttonVariants({ variant: 'default' }) }
+				on:click={() => (status = 'Input')}>Editar Imagen con Texto</Dialog.Trigger
+			>
+			<Dialog.Content class="!w-fit !max-w-[900px]">
+				<Dialog.Header>
+					<Dialog.Title>Editor de Imagen</Dialog.Title>
+					<div class="flex items-center gap-2 pt-4">
+						<Input
+							type="text"
+							placeholder="Texto de la imagen"
+							class="max-w-xs"
+							bind:value={text}
+						/>
+						<Input
+							type="number"
+							placeholder="Tamaño del texto"
+							class="max-w-[85px]"
+							bind:value={fontSize}
+						/>
+						<div class="h-12 w-12">
+							<Input class="h-full w-full rounded-md" type="color" bind:value={textColor} />
+						</div>
+					</div>
+				</Dialog.Header>
+				<div class="flex flex-col gap-4">
+					<ImageArea src="..." {status}>
+						{#if status === 'Loaded'}
+							<div
+								class="relative overflow-hidden border border-slate-50"
+								bind:this={editorContainer}
+							>
+								{#if selectedImage}
+									<DraggableText
+										{options}
+										{text}
+										{fontSize}
+										onPositionChange={handlePositionChange}
+										color={textColor}
+									/>
+								{/if}
+								<canvas class="block max-w-full" bind:this={canvas}></canvas>
+							</div>
+						{:else if status === 'Input'}
+							<label for="file" class="mt-2 cursor-pointer text-sm text-gray-500"
+								>Sube tu imagen aquí</label
+							>
+							<input
+								id="file"
+								name="file"
+								type="file"
+								accept="image/*"
+								class="hidden"
+								bind:this={imageInput}
+								on:change={handleImageUpload}
+							/>
+						{/if}
+					</ImageArea>
+
+					<Dialog.Close class="flex justify-end">
+						<Button variant="default" on:click={handleSave}>Guardar</Button>
+					</Dialog.Close>
+				</div>
+			</Dialog.Content>
+		</Dialog.Root>
+	</div>
 </main>
